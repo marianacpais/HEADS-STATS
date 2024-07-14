@@ -1,0 +1,662 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Lesson 03 - Multiple Linear regression &#8212; HEADS STATS v0.1 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=bd9e20870c6007c4c509" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=bd9e20870c6007c4c509" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=bd9e20870c6007c4c509" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=bd9e20870c6007c4c509" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=384b581d" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=bd9e20870c6007c4c509" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=bd9e20870c6007c4c509" />
+  <script src="_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=bd9e20870c6007c4c509"></script>
+
+    <script src="_static/documentation_options.js?v=d3792fb7"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'lesson03';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Lesson 04 - Regressão Logística" href="lesson04.html" />
+    <link rel="prev" title="Lesson 02 - Avaliação de Modelos" href="lesson02.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <header>
+  
+    <div class="bd-header navbar navbar-expand-lg bd-navbar">
+    </div>
+  
+  </header>
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">HEADS STATS v0.1 documentation</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="lesson01.html">Lesson 01 - Regressão Linear</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lesson02.html">Lesson 02 - Avaliação de Modelos</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Lesson 03 - Multiple Linear regression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lesson04.html">Lesson 04 - Regressão Logística</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lesson05.html">Lesson 05 - Regressão Logística - Avaliação dos Modelos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lesson06.html">Lesson 06 - Regressão Linear - Transformação Logarítmica</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lesson07.html">Lesson 07 - Regressão Linear - Transformação Logarítmica</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lesson08.html">Lesson 08 - Linear Mixed Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lesson09.html">Lesson 09 - Generalized Linear Mixed-Effects Model (GLMM)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lesson10.html">Lesson 10 - Regressão Logística Condicional</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lesson11.html">Lesson 11 - Análise de Sobrevivência</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lesson12.html">Lesson 12 - Regressão de Cox</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/lesson03.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Lesson 03 - Multiple Linear regression</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretacao"><strong>INTERPRETAÇÃO:</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#analise-de-variancia-anova-na-regressao-linear-multipla">Análise de Variância (ANOVA) na Regressão Linear Múltipla</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#componentes-da-tabela-anova">Componentes da Tabela ANOVA</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#calculo-da-variancia-explicada-pelo-modelo">Cálculo da Variância Explicada pelo Modelo</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Interpretação</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#verificacao-de-assuncoes">Verificação de Assunções</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#assuncoes-do-modelo-de-regressao-linear-multipla">Assunções do Modelo de Regressão Linear Múltipla</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#analise-dos-residuos">Análise dos Resíduos</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#instrucoes-em-r">Instruções em R</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#variaveis-categoricas">Variáveis Categóricas</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exemplo">Exemplo</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Interpretação</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#covariaveis-categoricas-com-mais-de-duas-categorias">Covariáveis Categóricas com Mais de Duas Categorias</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exemplo-de-criacao-de-variaveis-dummy-em-r">Exemplo de Criação de Variáveis Dummy em R</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#interacoes">Interações</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#explicacao">Explicação</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exemplo-abstrato">Exemplo Abstrato</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#instrucoes-em-r-para-incluir-interacoes">Instruções em R para Incluir Interações</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#inclusao-ou-exclusao-de-variaveis">Inclusão ou Exclusão de Variáveis</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#depende">Depende…</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#decidindo-quais-variaveis-incluir-ou-excluir">Decidindo Quais Variáveis Incluir ou Excluir</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="lesson-03-multiple-linear-regression">
+<h1>Lesson 03 - Multiple Linear regression<a class="headerlink" href="#lesson-03-multiple-linear-regression" title="Link to this heading">#</a></h1>
+<p>A regressão linear múltipla é uma extensão do modelo de regressão linear simples para várias covariáveis.</p>
+<p>[ y_i = eta_0 + eta_1 x_{1i} + \cdots + eta_k x_{ki} + \epsilon_i, \quad \epsilon_i \sim N(0, \sigma^2) ]</p>
+<p>[ \mu_{y_i | x_{1i}, x_{2i}, \ldots, x_{ki}} = eta_0 + eta_1 x_{1i} + \cdots eta_k x_{ki} ]</p>
+<hr class="docutils" />
+<section id="interpretacao">
+<h2><strong>INTERPRETAÇÃO:</strong><a class="headerlink" href="#interpretacao" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>Mantendo as outras variáveis constantes, o desfecho (y) aumenta em média (eta_j) unidades para cada unidade de aumento da covariável (x_j).</p>
+</div></blockquote>
+</section>
+<hr class="docutils" />
+<section id="analise-de-variancia-anova-na-regressao-linear-multipla">
+<h2>Análise de Variância (ANOVA) na Regressão Linear Múltipla<a class="headerlink" href="#analise-de-variancia-anova-na-regressao-linear-multipla" title="Link to this heading">#</a></h2>
+<p>A ANOVA na regressão linear múltipla é usada para determinar quanta variação da variável dependente (y) pode ser explicada pelo modelo.</p>
+<section id="componentes-da-tabela-anova">
+<h3>Componentes da Tabela ANOVA<a class="headerlink" href="#componentes-da-tabela-anova" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Df (Degrees of Freedom)</strong>: Graus de liberdade para cada componente do modelo.</p></li>
+<li><p><strong>Sum Sq (Soma dos Quadrados)</strong>: Medida da variação total explicada por cada variável e pelos resíduos.</p></li>
+<li><p><strong>Mean Sq (Quadrado Médio)</strong>: Soma dos Quadrados dividida pelos graus de liberdade.</p></li>
+<li><p><strong>F value (Valor F)</strong>: Razão do Quadrado Médio da variável explicativa pelo Quadrado Médio dos resíduos.</p></li>
+<li><p><strong>Pr(&gt;F) (Valor-p)</strong>: Probabilidade associada ao valor F. Valores-p pequenos indicam que a variável explicativa é significativa.</p></li>
+</ul>
+</section>
+</section>
+<section id="calculo-da-variancia-explicada-pelo-modelo">
+<h2>Cálculo da Variância Explicada pelo Modelo<a class="headerlink" href="#calculo-da-variancia-explicada-pelo-modelo" title="Link to this heading">#</a></h2>
+<p>A proporção da variação total explicada pelo modelo é calculada usando:</p>
+<p>[</p>
+<p>rac{	ext{Sum Sq das variáveis explicativas}}{	ext{Sum Sq das variáveis explicativas} + 	ext{Sum Sq dos resíduos}}
+]</p>
+<section id="id1">
+<h3>Interpretação<a class="headerlink" href="#id1" title="Link to this heading">#</a></h3>
+<blockquote>
+<div><p><strong>A proporção da variância no desfecho (y) explicada pelas variáveis independentes no modelo indica a qualidade do ajuste do modelo. Um valor mais alto sugere que o modelo explica melhor a variação no desfecho.</strong></p>
+</div></blockquote>
+</section>
+</section>
+<hr class="docutils" />
+<section id="verificacao-de-assuncoes">
+<h2>Verificação de Assunções<a class="headerlink" href="#verificacao-de-assuncoes" title="Link to this heading">#</a></h2>
+<p>Para verificar as assunções do modelo, podemos analisar os resíduos assim como fizemos na regressão linear simples.</p>
+<section id="assuncoes-do-modelo-de-regressao-linear-multipla">
+<h3>Assunções do Modelo de Regressão Linear Múltipla<a class="headerlink" href="#assuncoes-do-modelo-de-regressao-linear-multipla" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p><strong>Linearidade</strong>: A relação entre as variáveis independentes e a dependente é linear.</p></li>
+<li><p><strong>Independência</strong>: As observações são independentes.</p></li>
+<li><p><strong>Homoscedasticidade</strong>: A variância dos erros é constante ao longo de todos os valores das variáveis independentes.</p></li>
+<li><p><strong>Normalidade dos Erros</strong>: Os resíduos do modelo são normalmente distribuídos.</p></li>
+</ol>
+</section>
+<section id="analise-dos-residuos">
+<h3>Análise dos Resíduos<a class="headerlink" href="#analise-dos-residuos" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Gráfico de Resíduos vs Ajustados</strong>: Ajuda a verificar a homoscedasticidade e a linearidade.</p></li>
+<li><p><strong>Histograma dos Resíduos</strong>: Ajuda a verificar a normalidade dos erros.</p></li>
+<li><p><strong>Gráfico QQ (Quantil-Quantil)</strong>: Ajuda a verificar a normalidade dos resíduos.</p></li>
+<li><p><strong>Autocorrelação dos Resíduos</strong>: Pode ser verificada usando gráficos de autocorrelação para verificar a independência.</p></li>
+</ul>
+</section>
+<section id="instrucoes-em-r">
+<h3>Instruções em R<a class="headerlink" href="#instrucoes-em-r" title="Link to this heading">#</a></h3>
+<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="c1"># Ajustar o modelo de regressão linear múltipla</span>
+<span class="n">modelo</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">lm</span><span class="p">(</span><span class="n">y</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="n">x1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">x2</span><span class="p">,</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dados</span><span class="p">)</span>
+
+<span class="c1"># Plotar os resíduos vs ajustados</span>
+<span class="nf">plot</span><span class="p">(</span><span class="n">modelo</span><span class="o">$</span><span class="n">fitted.values</span><span class="p">,</span><span class="w"> </span><span class="nf">residuals</span><span class="p">(</span><span class="n">modelo</span><span class="p">),</span>
+<span class="w">     </span><span class="n">xlab</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Valores Ajustados&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">ylab</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Resíduos&quot;</span><span class="p">,</span>
+<span class="w">     </span><span class="n">main</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Resíduos vs Valores Ajustados&quot;</span><span class="p">)</span>
+
+<span class="c1"># Histograma dos resíduos</span>
+<span class="nf">hist</span><span class="p">(</span><span class="nf">residuals</span><span class="p">(</span><span class="n">modelo</span><span class="p">),</span><span class="w"> </span><span class="n">main</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Histograma dos Resíduos&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">xlab</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Resíduos&quot;</span><span class="p">)</span>
+
+<span class="c1"># Gráfico QQ dos resíduos</span>
+<span class="nf">qqnorm</span><span class="p">(</span><span class="nf">residuals</span><span class="p">(</span><span class="n">modelo</span><span class="p">))</span>
+<span class="nf">qqline</span><span class="p">(</span><span class="nf">residuals</span><span class="p">(</span><span class="n">modelo</span><span class="p">),</span><span class="w"> </span><span class="n">col</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;red&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="variaveis-categoricas">
+<h2>Variáveis Categóricas<a class="headerlink" href="#variaveis-categoricas" title="Link to this heading">#</a></h2>
+<p>Se considerarmos o mesmo exemplo, mas com uma covariável categórica:</p>
+<section id="exemplo">
+<h3>Exemplo<a class="headerlink" href="#exemplo" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Covariável categórica: Sexo (0=feminino; 1=masculino)</p></li>
+</ul>
+<p>Cada equação corresponde a uma linha com a mesma inclinação, mas com interceptos diferentes.</p>
+</section>
+<section id="id2">
+<h3>Interpretação<a class="headerlink" href="#id2" title="Link to this heading">#</a></h3>
+<blockquote>
+<div><p><strong>Mantendo as outras variáveis constantes, a diferença média no desfecho (y) entre os grupos da variável categórica (por exemplo, sexo) é constante, mas o efeito de uma covariável contínua (por exemplo, peso) no desfecho é o mesmo para ambos os grupos.</strong></p>
+</div></blockquote>
+<p>No entanto, esta igualdade é imposta quando escolhemos este modelo.</p>
+</section>
+<section id="covariaveis-categoricas-com-mais-de-duas-categorias">
+<h3>Covariáveis Categóricas com Mais de Duas Categorias<a class="headerlink" href="#covariaveis-categoricas-com-mais-de-duas-categorias" title="Link to this heading">#</a></h3>
+<p>Quando a variável categórica tem mais de duas categorias, existem duas abordagens possíveis:</p>
+<ol class="arabic simple">
+<li><p><strong>Linhas Paralelas (Impostas pelo Modelo)</strong></p>
+<ul class="simple">
+<li><p>Além das linhas serem paralelas, é imposto que a diferença entre o 3º e o 2º grupo é a mesma que a diferença entre o 1º e o 2º grupo.</p></li>
+</ul>
+</li>
+<li><p><strong>Diferenças Diferentes entre Grupos</strong></p>
+<ul class="simple">
+<li><p>Podemos permitir diferenças diferentes entre os grupos. Para isso, temos que criar variáveis indicadoras (dummy).</p></li>
+</ul>
+</li>
+</ol>
+</section>
+<section id="exemplo-de-criacao-de-variaveis-dummy-em-r">
+<h3>Exemplo de Criação de Variáveis Dummy em R<a class="headerlink" href="#exemplo-de-criacao-de-variaveis-dummy-em-r" title="Link to this heading">#</a></h3>
+<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="c1"># Suponha que temos uma variável categórica com três níveis</span>
+<span class="n">dados</span><span class="o">$</span><span class="n">dummy1</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">ifelse</span><span class="p">(</span><span class="n">dados</span><span class="o">$</span><span class="n">categoria</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;Nível1&quot;</span><span class="p">,</span><span class="w"> </span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="m">0</span><span class="p">)</span>
+<span class="n">dados</span><span class="o">$</span><span class="n">dummy2</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">ifelse</span><span class="p">(</span><span class="n">dados</span><span class="o">$</span><span class="n">categoria</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;Nível2&quot;</span><span class="p">,</span><span class="w"> </span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="m">0</span><span class="p">)</span>
+<span class="c1"># Nível3 é a categoria de referência</span>
+</pre></div>
+</div>
+<p>Com isso, podemos ajustar um modelo que permite diferentes interceptos para cada grupo da variável categórica.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="interacoes">
+<h2>Interações<a class="headerlink" href="#interacoes" title="Link to this heading">#</a></h2>
+<section id="explicacao">
+<h3>Explicação<a class="headerlink" href="#explicacao" title="Link to this heading">#</a></h3>
+<p>Uma interação no modelo indica que o efeito de uma variável sobre o desfecho depende do nível de outra variável. Quando temos uma interação no modelo, os efeitos principais (main effects) perdem parte da sua importância, pois o impacto das variáveis envolvidas na interação deve ser interpretado conjuntamente.</p>
+</section>
+<section id="exemplo-abstrato">
+<h3>Exemplo Abstrato<a class="headerlink" href="#exemplo-abstrato" title="Link to this heading">#</a></h3>
+<blockquote>
+<div><p><strong>O efeito da variável (x) no desfecho (y) é (eta_x) para um grupo (grupo=0) e (eta_x + eta_{	ext{interação}}) para outro grupo (grupo=1). No entanto, esta interação não é significativa (p=0.341).</strong></p>
+</div></blockquote>
+<p>Isso significa que, apesar de termos incluído a interação no modelo, não há evidência estatística suficiente para afirmar que o efeito de (x) no desfecho (y) é diferente entre os grupos.</p>
+</section>
+<section id="instrucoes-em-r-para-incluir-interacoes">
+<h3>Instruções em R para Incluir Interações<a class="headerlink" href="#instrucoes-em-r-para-incluir-interacoes" title="Link to this heading">#</a></h3>
+<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="c1"># Ajustar o modelo de regressão com interação</span>
+<span class="n">modelo_interacao</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">lm</span><span class="p">(</span><span class="n">y</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="n">x1</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">x2</span><span class="p">,</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dados</span><span class="p">)</span>
+<span class="nf">summary</span><span class="p">(</span><span class="n">modelo_interacao</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="inclusao-ou-exclusao-de-variaveis">
+<h2>Inclusão ou Exclusão de Variáveis<a class="headerlink" href="#inclusao-ou-exclusao-de-variaveis" title="Link to this heading">#</a></h2>
+<p>Se o efeito de uma interação ou covariável não é significativo, devemos removê-lo do modelo?</p>
+<section id="depende">
+<h3>Depende…<a class="headerlink" href="#depende" title="Link to this heading">#</a></h3>
+<p>A decisão de incluir ou excluir variáveis do modelo não deve basear-se apenas na significância estatística. É importante considerar o contexto e o conhecimento prático do problema.</p>
+</section>
+<section id="decidindo-quais-variaveis-incluir-ou-excluir">
+<h3>Decidindo Quais Variáveis Incluir ou Excluir<a class="headerlink" href="#decidindo-quais-variaveis-incluir-ou-excluir" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Significância Estatística</strong>: Variáveis com valores-p baixos indicam significância estatística.</p></li>
+<li><p><strong>Teoria e Conhecimento Prévio</strong>: O entendimento do problema e a teoria subjacente podem sugerir a inclusão de certas variáveis, mesmo que não sejam estatisticamente significativas.</p></li>
+<li><p><strong>Parcimónia</strong>: Modelos mais simples são geralmente preferíveis, a menos que a inclusão de variáveis adicionais melhore significativamente o ajuste do modelo.</p></li>
+<li><p><strong>Impacto Prático</strong>: Considere se a inclusão da variável faz sentido no contexto prático e se ela melhora a interpretação e a utilidade do modelo.</p></li>
+</ul>
+</section>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="lesson02.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Lesson 02 - Avaliação de Modelos</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="lesson04.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Lesson 04 - Regressão Logística</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretacao"><strong>INTERPRETAÇÃO:</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#analise-de-variancia-anova-na-regressao-linear-multipla">Análise de Variância (ANOVA) na Regressão Linear Múltipla</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#componentes-da-tabela-anova">Componentes da Tabela ANOVA</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#calculo-da-variancia-explicada-pelo-modelo">Cálculo da Variância Explicada pelo Modelo</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Interpretação</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#verificacao-de-assuncoes">Verificação de Assunções</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#assuncoes-do-modelo-de-regressao-linear-multipla">Assunções do Modelo de Regressão Linear Múltipla</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#analise-dos-residuos">Análise dos Resíduos</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#instrucoes-em-r">Instruções em R</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#variaveis-categoricas">Variáveis Categóricas</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exemplo">Exemplo</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Interpretação</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#covariaveis-categoricas-com-mais-de-duas-categorias">Covariáveis Categóricas com Mais de Duas Categorias</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exemplo-de-criacao-de-variaveis-dummy-em-r">Exemplo de Criação de Variáveis Dummy em R</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#interacoes">Interações</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#explicacao">Explicação</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exemplo-abstrato">Exemplo Abstrato</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#instrucoes-em-r-para-incluir-interacoes">Instruções em R para Incluir Interações</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#inclusao-ou-exclusao-de-variaveis">Inclusão ou Exclusão de Variáveis</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#depende">Depende…</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#decidindo-quais-variaveis-incluir-ou-excluir">Decidindo Quais Variáveis Incluir ou Excluir</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Mariana Canelas-Pais
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2024, Mariana Canelas-Pais.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=bd9e20870c6007c4c509"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=bd9e20870c6007c4c509"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

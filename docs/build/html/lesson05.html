@@ -1,0 +1,554 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Lesson 05 - Regressão Logística - Avaliação dos Modelos &#8212; HEADS STATS v0.1 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=bd9e20870c6007c4c509" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=bd9e20870c6007c4c509" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=bd9e20870c6007c4c509" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=bd9e20870c6007c4c509" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=384b581d" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=bd9e20870c6007c4c509" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=bd9e20870c6007c4c509" />
+  <script src="_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=bd9e20870c6007c4c509"></script>
+
+    <script src="_static/documentation_options.js?v=d3792fb7"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'lesson05';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Lesson 06 - Regressão Linear - Transformação Logarítmica" href="lesson06.html" />
+    <link rel="prev" title="Lesson 04 - Regressão Logística" href="lesson04.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <header>
+  
+    <div class="bd-header navbar navbar-expand-lg bd-navbar">
+    </div>
+  
+  </header>
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">HEADS STATS v0.1 documentation</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="lesson01.html">Lesson 01 - Regressão Linear</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lesson02.html">Lesson 02 - Avaliação de Modelos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lesson03.html">Lesson 03 - Multiple Linear regression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lesson04.html">Lesson 04 - Regressão Logística</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Lesson 05 - Regressão Logística - Avaliação dos Modelos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lesson06.html">Lesson 06 - Regressão Linear - Transformação Logarítmica</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lesson07.html">Lesson 07 - Regressão Linear - Transformação Logarítmica</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lesson08.html">Lesson 08 - Linear Mixed Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lesson09.html">Lesson 09 - Generalized Linear Mixed-Effects Model (GLMM)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lesson10.html">Lesson 10 - Regressão Logística Condicional</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lesson11.html">Lesson 11 - Análise de Sobrevivência</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lesson12.html">Lesson 12 - Regressão de Cox</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/lesson05.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Lesson 05 - Regressão Logística - Avaliação dos Modelos</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#goodness-of-fit-ajuste-do-modelo">Goodness of Fit (Ajuste do Modelo)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discriminacao">Discriminação</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#teste-de-hosmer-lemeshow">Teste de Hosmer-Lemeshow</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#classificacao-com-probabilidade-prevista">Classificação com Probabilidade Prevista</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#curva-roc-receiver-operating-characteristic">Curva ROC (Receiver Operating Characteristic)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#area-sob-a-curva-auc-roc">Área sob a Curva (AUC-ROC)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#resumo">Resumo</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="lesson-05-regressao-logistica-avaliacao-dos-modelos">
+<h1>Lesson 05 - Regressão Logística - Avaliação dos Modelos<a class="headerlink" href="#lesson-05-regressao-logistica-avaliacao-dos-modelos" title="Link to this heading">#</a></h1>
+<section id="goodness-of-fit-ajuste-do-modelo">
+<h2>Goodness of Fit (Ajuste do Modelo)<a class="headerlink" href="#goodness-of-fit-ajuste-do-modelo" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Definição:</strong> É a comparação entre o resultado observado e o previsto pelo modelo.</p></li>
+<li><p><strong>Objetivo:</strong> Avaliar quão bem o modelo está ajustado aos dados observados.</p></li>
+<li><p><strong>Exemplos de Testes:</strong></p>
+<ul>
+<li><p><strong>Teste de Hosmer-Lemeshow:</strong> Avalia a calibração do modelo comparando os resultados observados e esperados em diferentes grupos de risco.</p></li>
+<li><p><strong>Deviance:</strong> Mede a diferença entre o modelo ajustado e o modelo perfeito. Um deviance baixo indica um bom ajuste.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="discriminacao">
+<h2>Discriminação<a class="headerlink" href="#discriminacao" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Definição:</strong> Avalia a capacidade do modelo em classificar corretamente um indivíduo baseado nas covariáveis do modelo.</p></li>
+<li><p><strong>Objetivo:</strong> Determinar a habilidade do modelo em distinguir entre diferentes categorias de resposta.</p></li>
+<li><p><strong>Medidas de Discriminação:</strong></p>
+<ul>
+<li><p><strong>Sensibilidade (Sensitivity):</strong> ( P(	ext{subject i rated 1} ,|, y_i^{obs}=1) )</p>
+<ul>
+<li><p>A capacidade do modelo em identificar corretamente os verdadeiros positivos.</p></li>
+</ul>
+</li>
+<li><p><strong>Especificidade (Specificity):</strong> ( P(	ext{subject i rated 0} ,|, y_i^{obs}=0) )</p>
+<ul>
+<li><p>A capacidade do modelo em identificar corretamente os verdadeiros negativos.</p></li>
+</ul>
+</li>
+<li><p><strong>AUC-ROC (Área sob a curva ROC):</strong> Mede a capacidade do modelo em distinguir entre classes. Um valor próximo de 1 indica excelente discriminação.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="teste-de-hosmer-lemeshow">
+<h2>Teste de Hosmer-Lemeshow<a class="headerlink" href="#teste-de-hosmer-lemeshow" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Objetivo:</strong> Comparar os valores previstos com os valores observados.</p></li>
+<li><p><strong>Desafio:</strong> As observações são binárias, mas o modelo prevê probabilidades.</p></li>
+<li><p><strong>Procedimento:</strong></p>
+<ul>
+<li><p>Calcular para cada indivíduo a probabilidade ( P(y=1|x) ) prevista pelo modelo.</p></li>
+<li><p>Considerar os decis (percentis de 10%, 20%, …, 90%) das probabilidades previstas pelo modelo.</p></li>
+<li><p>Em cada decil, calcular o número de indivíduos com o evento observado e comparar com o esperado.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="classificacao-com-probabilidade-prevista">
+<h2>Classificação com Probabilidade Prevista<a class="headerlink" href="#classificacao-com-probabilidade-prevista" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Desafio:</strong> Para classificar um sujeito baseado numa probabilidade prevista (variável contínua), é necessário estabelecer uma regra (um ponto de corte).</p></li>
+<li><p><strong>Ponto de Corte (Cut-off):</strong></p>
+<ul>
+<li><p>O ponto de corte é a probabilidade acima da qual classificamos um indivíduo como tendo o evento.</p></li>
+<li><p>A escolha do ponto de corte pode afetar a sensibilidade e a especificidade do modelo.</p></li>
+<li><p>Um ponto de corte comum é 0.5, mas pode ser ajustado dependendo do contexto e das consequências dos erros de classificação.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="curva-roc-receiver-operating-characteristic">
+<h2>Curva ROC (Receiver Operating Characteristic)<a class="headerlink" href="#curva-roc-receiver-operating-characteristic" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Definição:</strong> É um gráfico que mostra a performance de um modelo de classificação binária.</p></li>
+<li><p><strong>Eixos da Curva ROC:</strong></p>
+<ul>
+<li><p>Eixo X: 1 - Especificidade (Taxa de Falsos Positivos)</p></li>
+<li><p>Eixo Y: Sensibilidade (Taxa de Verdadeiros Positivos)</p></li>
+</ul>
+</li>
+<li><p><strong>AUC-ROC (Área sob a Curva ROC):</strong> Mede a capacidade do modelo em distinguir entre classes. Um valor próximo de 1 indica excelente discriminação.</p></li>
+<li><p><strong>Importância da Curva ROC:</strong> Independentemente do critério usado (como um único ponto de corte), a curva ROC fornece uma visão mais completa da capacidade do modelo em discriminar, mostrando a trade-off entre sensibilidade e especificidade para todos os possíveis pontos de corte.</p></li>
+<li><p><strong>Equilíbrio entre Sensibilidade e Especificidade:</strong> Sensibilidade e especificidade são características difíceis de balancear. Aumentar uma geralmente leva à diminuição da outra. A curva ROC representa esta relação antagonista ao longo de um continuum de valores de “cutoff”.</p></li>
+</ul>
+</section>
+<section id="area-sob-a-curva-auc-roc">
+<h2>Área sob a Curva (AUC-ROC)<a class="headerlink" href="#area-sob-a-curva-auc-roc" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Definição:</strong> A área sob a curva ROC (AUC-ROC) é uma métrica que resume a performance do modelo de classificação ao longo de todos os pontos de corte possíveis.</p></li>
+<li><p><strong>Interpretação:</strong></p>
+<ul>
+<li><p>AUC = 1: Perfeita capacidade de discriminação (modelo ideal).</p></li>
+<li><p>AUC = 0.5: Incapacidade de discriminar (equivalente a uma classificação aleatória).</p></li>
+<li><p>AUC &lt; 0.5: Desempenho pior que a classificação aleatória (raramente ocorre em prática e pode indicar um erro no modelo).</p></li>
+</ul>
+</li>
+<li><p><strong>Como Avaliar:</strong></p>
+<ul>
+<li><p><strong>Excelente Discriminação:</strong> AUC entre 0.9 e 1.</p></li>
+<li><p><strong>Boa Discriminação:</strong> AUC entre 0.8 e 0.9.</p></li>
+<li><p><strong>Moderada Discriminação:</strong> AUC entre 0.7 e 0.8.</p></li>
+<li><p><strong>Pobre Discriminação:</strong> AUC entre 0.6 e 0.7.</p></li>
+<li><p><strong>Fraca Discriminação:</strong> AUC entre 0.5 e 0.6.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="resumo">
+<h2>Resumo<a class="headerlink" href="#resumo" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Goodness of Fit</strong> avalia a calibração do modelo, ou seja, como os resultados previstos se alinham com os resultados observados.</p></li>
+<li><p><strong>Discriminação</strong> mede a capacidade do modelo em classificar corretamente os indivíduos com base nas covariáveis fornecidas.</p></li>
+<li><p><strong>Teste de Hosmer-Lemeshow:</strong> Um método específico para avaliar a calibração, comparando os valores observados e previstos em diferentes grupos de risco.</p></li>
+<li><p><strong>Classificação com Probabilidade Prevista:</strong> Necessita de um ponto de corte para converter a probabilidade contínua em uma classificação binária.</p></li>
+<li><p><strong>Curva ROC:</strong> Fornece uma visão abrangente da capacidade de discriminação do modelo, mostrando a relação entre sensibilidade e especificidade para todos os pontos de corte possíveis, destacando a dificuldade de balancear ambas simultaneamente.</p></li>
+<li><p><strong>Área sob a Curva (AUC-ROC):</strong> Uma métrica que resume a performance do modelo de classificação, com valores mais altos indicando melhor discriminação.</p></li>
+</ul>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="lesson04.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Lesson 04 - Regressão Logística</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="lesson06.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Lesson 06 - Regressão Linear - Transformação Logarítmica</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#goodness-of-fit-ajuste-do-modelo">Goodness of Fit (Ajuste do Modelo)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discriminacao">Discriminação</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#teste-de-hosmer-lemeshow">Teste de Hosmer-Lemeshow</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#classificacao-com-probabilidade-prevista">Classificação com Probabilidade Prevista</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#curva-roc-receiver-operating-characteristic">Curva ROC (Receiver Operating Characteristic)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#area-sob-a-curva-auc-roc">Área sob a Curva (AUC-ROC)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#resumo">Resumo</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Mariana Canelas-Pais
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2024, Mariana Canelas-Pais.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=bd9e20870c6007c4c509"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=bd9e20870c6007c4c509"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

@@ -1,0 +1,685 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Lesson 11 - Análise de Sobrevivência &#8212; HEADS STATS v0.1 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=bd9e20870c6007c4c509" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=bd9e20870c6007c4c509" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=bd9e20870c6007c4c509" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=bd9e20870c6007c4c509" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=384b581d" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=bd9e20870c6007c4c509" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=bd9e20870c6007c4c509" />
+  <script src="_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=bd9e20870c6007c4c509"></script>
+
+    <script src="_static/documentation_options.js?v=d3792fb7"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'lesson11';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Lesson 12 - Regressão de Cox" href="lesson12.html" />
+    <link rel="prev" title="Lesson 10 - Regressão Logística Condicional" href="lesson10.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <header>
+  
+    <div class="bd-header navbar navbar-expand-lg bd-navbar">
+    </div>
+  
+  </header>
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">HEADS STATS v0.1 documentation</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="lesson01.html">Lesson 01 - Regressão Linear</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lesson02.html">Lesson 02 - Avaliação de Modelos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lesson03.html">Lesson 03 - Multiple Linear regression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lesson04.html">Lesson 04 - Regressão Logística</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lesson05.html">Lesson 05 - Regressão Logística - Avaliação dos Modelos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lesson06.html">Lesson 06 - Regressão Linear - Transformação Logarítmica</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lesson07.html">Lesson 07 - Regressão Linear - Transformação Logarítmica</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lesson08.html">Lesson 08 - Linear Mixed Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lesson09.html">Lesson 09 - Generalized Linear Mixed-Effects Model (GLMM)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lesson10.html">Lesson 10 - Regressão Logística Condicional</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Lesson 11 - Análise de Sobrevivência</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lesson12.html">Lesson 12 - Regressão de Cox</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/lesson11.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Lesson 11 - Análise de Sobrevivência</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#o-que-e-a-analise-de-sobrevivencia">O que é a Análise de Sobrevivência?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#objetivos-da-analise-de-sobrevivencia">Objetivos da Análise de Sobrevivência</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#censura">Censura</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#como-lidar-com-a-censura">Como Lidar com a Censura?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#por-que-usar-a-analise-de-sobrevivencia">Por Que Usar a Análise de Sobrevivência?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dados-de-tempo-ate-o-evento">Dados de Tempo até o Evento</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tempo-ate-o-evento">Tempo até o Evento</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Censura</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#estrutura-de-dados-na-analise-de-sobrevivencia">Estrutura de Dados na Análise de Sobrevivência</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introducao-as-distribuicoes-de-sobrevivencia">Introdução às Distribuições de Sobrevivência</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#funcao-de-sobrevivencia">Função de Sobrevivência</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#funcao-de-risco-hazard-function">Função de Risco (Hazard Function)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#funcao-de-risco-vs-densidade-de-probabilidade">Função de Risco vs. Densidade de Probabilidade</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#analise-de-kaplan-meier">Análise de Kaplan-Meier</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="lesson-11-analise-de-sobrevivencia">
+<h1>Lesson 11 - Análise de Sobrevivência<a class="headerlink" href="#lesson-11-analise-de-sobrevivencia" title="Link to this heading">#</a></h1>
+<section id="o-que-e-a-analise-de-sobrevivencia">
+<h2>O que é a Análise de Sobrevivência?<a class="headerlink" href="#o-que-e-a-analise-de-sobrevivencia" title="Link to this heading">#</a></h2>
+<p>A análise de sobrevivência inclui métodos estatísticos para analisar dados longitudinais de tempo até um evento. Os eventos podem incluir:</p>
+<ul class="simple">
+<li><p>Morte</p></li>
+<li><p>Lesão</p></li>
+<li><p>Início de doença</p></li>
+<li><p>Recuperação de doença</p></li>
+<li><p>Transição acima ou abaixo do limiar clínico de uma variável contínua significativa</p></li>
+</ul>
+</section>
+<section id="objetivos-da-analise-de-sobrevivencia">
+<h2>Objetivos da Análise de Sobrevivência<a class="headerlink" href="#objetivos-da-analise-de-sobrevivencia" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Estimar o tempo até o evento para um grupo de indivíduos:</strong> Por exemplo, tempo até a morte para um grupo de pacientes com câncer.</p></li>
+<li><p><strong>Comparar o tempo até o evento entre dois ou mais grupos:</strong> Por exemplo, pacientes tratados vs pacientes placebo em um ensaio clínico randomizado.</p></li>
+<li><p><strong>Avaliar a relação das covariáveis com o tempo até o evento:</strong> Por exemplo, idade, um certo biomarcador ou o tamanho do tumor influenciam o tempo de sobrevivência de pacientes com câncer?</p></li>
+</ul>
+</section>
+<section id="censura">
+<h2>Censura<a class="headerlink" href="#censura" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Pacientes que não tiveram o evento são considerados censurados:</strong></p>
+<ul>
+<li><p>Sabemos que eles sobreviveram por um período específico, mas não sabemos o tempo exato do evento.</p></li>
+<li><p>Acreditamos que o evento teria ocorrido se os observássemos por mais tempo.</p></li>
+<li><p>Esses pacientes fornecem alguma informação, mas não informação completa.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="como-lidar-com-a-censura">
+<h2>Como Lidar com a Censura?<a class="headerlink" href="#como-lidar-com-a-censura" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Ignorar a censura e considerar que o evento ocorreu no momento da censura:</strong></p>
+<ul>
+<li><p>Incorreto, pois quase certamente não é verdade.</p></li>
+</ul>
+</li>
+<li><p><strong>Remover o paciente da análise:</strong></p>
+<ul>
+<li><p>Pode introduzir viés e perda de poder estatístico.</p></li>
+</ul>
+</li>
+<li><p><strong>Análise de Sobrevivência:</strong></p>
+<ul>
+<li><p>Nosso objetivo é estimar a distribuição de sobrevivência dos pacientes na presença de censura.</p></li>
+<li><p>A censura é considerada na análise.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="por-que-usar-a-analise-de-sobrevivencia">
+<h2>Por Que Usar a Análise de Sobrevivência?<a class="headerlink" href="#por-que-usar-a-analise-de-sobrevivencia" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Por que não comparar o tempo médio até o evento entre grupos usando um teste t ou regressão linear?</strong></p>
+<ul>
+<li><p>Essas abordagens não levam em consideração a censura, o que pode resultar em estimativas enviesadas do tempo médio até o evento.</p></li>
+</ul>
+</li>
+<li><p><strong>Por que não comparar a proporção de eventos nos grupos usando razões de risco/odds ou regressão logística?</strong></p>
+<ul>
+<li><p>Estas abordagens ignoram o componente temporal dos dados de sobrevivência. A análise de sobrevivência é projetada para lidar com a censura e para estimar o tempo até o evento de forma mais precisa.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="dados-de-tempo-ate-o-evento">
+<h2>Dados de Tempo até o Evento<a class="headerlink" href="#dados-de-tempo-ate-o-evento" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Em análise de sobrevivência, o tempo até a ocorrência de um evento bem definido é registrado (dados de tempo até o evento).</strong></p>
+<ul>
+<li><p><strong>Tempo de Sobrevivência:</strong></p>
+<ul>
+<li><p>Se todos tivessem um evento, alguns dos métodos que já aprendemos poderiam ser aplicados.</p></li>
+<li><p>Frequentemente, nem todos têm o evento - censura.</p></li>
+<li><p>Pode ocorrer devido a:</p>
+<ul>
+<li><p>Perda de seguimento</p></li>
+<li><p>Fim do estudo</p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="tempo-ate-o-evento">
+<h2>Tempo até o Evento<a class="headerlink" href="#tempo-ate-o-evento" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Tempo até o evento:</strong> O tempo desde a entrada no estudo até que um sujeito tenha um determinado desfecho.</p></li>
+</ul>
+</section>
+<section id="id1">
+<h2>Censura<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Censura:</strong> Sujeitos são considerados censurados se:</p>
+<ul>
+<li><p>Eles são perdidos no seguimento ou saem do estudo.</p></li>
+<li><p>Eles morrem de causas não relacionadas.</p></li>
+<li><p>O estudo termina antes que tenham o evento de interesse.</p></li>
+<li><p>Eles são contabilizados como vivos ou livres de doença pelo tempo em que estiveram inscritos no estudo.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="estrutura-de-dados-na-analise-de-sobrevivencia">
+<h2>Estrutura de Dados na Análise de Sobrevivência<a class="headerlink" href="#estrutura-de-dados-na-analise-de-sobrevivencia" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Desfecho de duas variáveis:</strong></p>
+<ul>
+<li><p><strong>Variável de Tempo (T):</strong> ( t_i ) = tempo na última observação sem evento ou tempo no evento.</p></li>
+<li><p><strong>Variável de Censura (C):</strong> ( c_i ) = 1 se teve o evento; ( c_i ) = 0 se não teve o evento até o tempo ( t_i ).</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="introducao-as-distribuicoes-de-sobrevivencia">
+<h2>Introdução às Distribuições de Sobrevivência<a class="headerlink" href="#introducao-as-distribuicoes-de-sobrevivencia" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>( T_i ), o tempo do evento para um indivíduo, é uma variável aleatória com uma distribuição de probabilidade.</strong></p>
+<ul>
+<li><p>Diferentes modelos para dados de sobrevivência são distinguidos pela escolha da distribuição para ( T_i ).</p></li>
+<li><p><strong>A probabilidade (densidade) do tempo do evento ocorrer exatamente no tempo ( t ):</strong>
+[
+f(t) = \lim_{\Delta t 	o 0}
+rac{P(t \leq T &lt; t + \Delta t)}{\Delta t}
+]</p></li>
+<li><p><strong>A probabilidade cumulativa (densidade) do tempo do evento ocorrer antes do tempo ( t ):</strong>
+[
+F(t) = P(T \leq t) = \int_{-\infty}^{t} f(t) , dt
+]</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="funcao-de-sobrevivencia">
+<h2>Função de Sobrevivência<a class="headerlink" href="#funcao-de-sobrevivencia" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Função de sobrevivência:</strong> ( S(t) = 1 - F(t) )</p>
+<ul>
+<li><p>O objetivo da análise de sobrevivência é estimar e comparar as experiências de sobrevivência de diferentes grupos.</p></li>
+<li><p>A experiência de sobrevivência é descrita pela função de sobrevivência cumulativa:
+[
+S(t) = 1 - P(T \leq t) = 1 - F(t)
+]</p></li>
+<li><p><strong>Exemplo:</strong> Se ( t = 100 ) anos, ( S(t = 100) ) é a probabilidade de sobreviver além dos 100 anos.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="funcao-de-risco-hazard-function">
+<h2>Função de Risco (Hazard Function)<a class="headerlink" href="#funcao-de-risco-hazard-function" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Função de Risco:</strong></p>
+<ul>
+<li><p>A probabilidade de que, se você sobreviver até ( t ), você sucumbirá ao evento no instante seguinte:
+[
+h(t) = \lim_{\Delta t 	o 0}
+rac{P(t \leq T &lt; t + \Delta t \mid T \geq t)}{\Delta t}
+]</p></li>
+<li><p>Onde:
+[
+h(t) \Delta t = P(t \leq T &lt; t + \Delta t \mid T \geq t) =
+rac{P(t \leq T &lt; t + \Delta t \cap T \geq t)}{P(T \geq t)} =
+rac{P(t \leq T &lt; t + \Delta t)}{P(T \geq t)} =
+rac{f(t) \Delta t}{S(t)} =
+rac{-S’(t) \Delta t}{S(t)}
+]</p></li>
+<li><p>Portanto, a função de risco é:
+[
+h(t) =
+rac{-S’(t)}{S(t)}
+]</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="funcao-de-risco-vs-densidade-de-probabilidade">
+<h2>Função de Risco vs. Densidade de Probabilidade<a class="headerlink" href="#funcao-de-risco-vs-densidade-de-probabilidade" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Densidade de Probabilidade:</strong></p>
+<ul>
+<li><p>Quando você nasce, você tem uma certa probabilidade de morrer em qualquer idade; essa é a densidade de probabilidade.</p></li>
+<li><p><strong>Exemplo:</strong> Uma mulher nascida hoje tem, digamos, 1% de chance de morrer aos 80 anos.</p></li>
+</ul>
+</li>
+<li><p><strong>Função de Risco:</strong></p>
+<ul>
+<li><p>No entanto, à medida que você sobrevive por algum tempo, suas probabilidades continuam mudando; essa é a taxa de risco (pense: probabilidade condicional).</p></li>
+<li><p><strong>Exemplo:</strong> Uma mulher que tem 79 anos hoje tem, digamos, 5% de chance de morrer aos 80 anos.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="analise-de-kaplan-meier">
+<h2>Análise de Kaplan-Meier<a class="headerlink" href="#analise-de-kaplan-meier" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>A Análise de Kaplan-Meier</strong> é uma técnica não paramétrica usada para estimar a função de sobrevivência a partir de dados de tempo até o evento.</p></li>
+<li><p><strong>Função de Sobrevivência Estimada:</strong></p>
+<ul>
+<li><p>A função de sobrevivência Kaplan-Meier é uma estimativa em degraus da probabilidade de sobrevivência a partir do tempo inicial até vários pontos no tempo.</p></li>
+<li><p>A probabilidade de sobrevivência é recalculada sempre que ocorre um evento.</p></li>
+<li><p>A estimativa é ajustada para censura, onde os dados são censurados (por exemplo, um paciente é perdido para o seguimento).</p></li>
+</ul>
+</li>
+<li><p><strong>Curva de Kaplan-Meier:</strong></p>
+<ul>
+<li><p>A curva de Kaplan-Meier é um gráfico da função de sobrevivência estimada versus o tempo.</p></li>
+<li><p>Cada queda na curva representa a ocorrência de um evento.</p></li>
+<li><p>Os pontos de censura são geralmente indicados por marcas (por exemplo, cruzes) na curva.</p></li>
+</ul>
+</li>
+<li><p><strong>Comparação entre Grupos:</strong></p>
+<ul>
+<li><p>O teste de log-rank é comumente usado para comparar curvas de sobrevivência entre dois ou mais grupos.</p></li>
+<li><p>Este teste verifica a hipótese nula de que não há diferença nas curvas de sobrevivência entre os grupos.</p></li>
+</ul>
+</li>
+</ul>
+<p><strong>Exemplo de Aplicação:</strong></p>
+<ul class="simple">
+<li><p>Estimar a probabilidade de sobrevivência de pacientes com câncer ao longo do tempo e comparar a sobrevivência entre diferentes grupos de tratamento.</p></li>
+</ul>
+<p>Este método é amplamente utilizado em estudos clínicos para avaliar a eficácia de tratamentos e entender melhor os padrões de sobrevivência em diversas condições médicas.</p>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="lesson10.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Lesson 10 - Regressão Logística Condicional</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="lesson12.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Lesson 12 - Regressão de Cox</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#o-que-e-a-analise-de-sobrevivencia">O que é a Análise de Sobrevivência?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#objetivos-da-analise-de-sobrevivencia">Objetivos da Análise de Sobrevivência</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#censura">Censura</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#como-lidar-com-a-censura">Como Lidar com a Censura?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#por-que-usar-a-analise-de-sobrevivencia">Por Que Usar a Análise de Sobrevivência?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dados-de-tempo-ate-o-evento">Dados de Tempo até o Evento</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tempo-ate-o-evento">Tempo até o Evento</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Censura</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#estrutura-de-dados-na-analise-de-sobrevivencia">Estrutura de Dados na Análise de Sobrevivência</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introducao-as-distribuicoes-de-sobrevivencia">Introdução às Distribuições de Sobrevivência</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#funcao-de-sobrevivencia">Função de Sobrevivência</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#funcao-de-risco-hazard-function">Função de Risco (Hazard Function)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#funcao-de-risco-vs-densidade-de-probabilidade">Função de Risco vs. Densidade de Probabilidade</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#analise-de-kaplan-meier">Análise de Kaplan-Meier</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Mariana Canelas-Pais
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2024, Mariana Canelas-Pais.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=bd9e20870c6007c4c509"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=bd9e20870c6007c4c509"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
